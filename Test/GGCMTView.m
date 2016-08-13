@@ -244,7 +244,7 @@
 
 - (void)loadCellData
 {
-//    NSLog(@"reusefulPool ============    %@",self.reusefulPool);
+    NSLog(@"reusefulPool ============    %@",self.reusefulPool);
     if([self.dataSource numberOfPageInCmtView:self] <= 0){
         return;
     }
