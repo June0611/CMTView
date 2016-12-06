@@ -244,7 +244,7 @@
 
 - (void)loadCellData
 {
-    NSLog(@"reusefulPool ============    %@",self.reusefulPool);
+    
     if([self.dataSource numberOfPageInCmtView:self] <= 0){
         return;
     }
@@ -282,6 +282,7 @@
     
     //把刚刚用的所有的cell回收到缓冲池
     [self.reusefulPool addObjectsFromArray:[self.usedPool allObjects]];
+    NSLog(@"reusefulPool ============    %@",self.reusefulPool);
     //把正在使用的cell从使用区移除
     [self.usedPool removeAllObjects];
     //把当前正在使用的cell放入使用区

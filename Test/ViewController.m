@@ -10,7 +10,8 @@
 #import "GGCMTView.h"
 #import "CustomTableViewCell.h"
 #import "UIView+Frame.h"
-
+#import <objc/runtime.h>
+#import "RSATool.h"
 static NSString * reuseIdentifier = @"cell";
 @interface ViewController ()<cmtViewDelegate,cmtViewDataSource>
 
@@ -33,13 +34,13 @@ static NSString * reuseIdentifier = @"cell";
 
 - (NSArray *)dataArr1{
     if (!_dataArr1) {
-        _dataArr1 = @[@"1.jpg",@"2.jpg",@"3.jpg",@"4.jpg",@"5.jpg",@"6.jpg",@"7.jpg"];
+        _dataArr1 = @[@"8.png",@"9.png",@"10.png",@"11.png",@"12.png",@"13.png",@"14.png",@"15.png",@"16.png"];
     }
     return _dataArr1;
 }
 - (NSArray *)dataArr2{
     if (!_dataArr2) {
-        _dataArr2 = @[@"7.jpg",@"6.jpg",@"5.jpg",@"4.jpg",@"3.jpg",@"2.jpg",@"1.jpg"];
+        _dataArr2 = @[@"8.png",@"9.png",@"10.png",@"11.png",@"12.png",@"13.png",@"14.png",@"15.png",@"16.png"];
     }
     return _dataArr2;
 }
@@ -47,15 +48,50 @@ static NSString * reuseIdentifier = @"cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor grayColor];
+    [self testRSAEncrpt];
+//    [self testUDID];
     [self testCMTView];
     [self testCMTView2];
     
 }
 
 
+
+- (void)testRSAEncrpt{
+    NSString * tmp = @"使用字符串格式的公钥私钥加密解密";
+    NSLog(@"加密前:%@",tmp);
+    tmp = [RSATool encryptString:tmp];
+    NSLog(@"加密后:%@",tmp);
+    tmp = [RSATool decryptString:tmp];
+    NSLog(@"解密后:%@",tmp);
+}
+
+- (void)testUDID{
+    NSString *className = NSStringFromClass([UIDevice class]);
+    
+    
+    const char *cClassName = [className UTF8String];
+    
+    id theClass = objc_getClass(cClassName);
+    
+    unsigned int outCount;
+    
+    
+    Method *m =  class_copyMethodList(theClass,&outCount);
+    
+    NSLog(@"%d",outCount);
+    for (int i = 0; i<outCount; i++) {
+        SEL a = method_getName(*(m+i));
+        NSString *sn = NSStringFromSelector(a);
+        NSLog(@"%@",sn);
+    }
+}
+
+
+
 - (void)testCMTView{
     GGCMTView * cmtView = [[GGCMTView alloc]initWithFrame:CGRectMake(0, 100, self.view.width, 200) andCMTViewStyle:CMTViewHorizontalStyle];
-    cmtView.timeInterval = 4.0f;
+    cmtView.timeInterval = 1.0f;
     cmtView.enableUserScroll = YES;
     [self.view addSubview:cmtView];
     cmtView.dataSource = self;
@@ -83,6 +119,7 @@ static NSString * reuseIdentifier = @"cell";
     CustomTableViewCell * cell = [CustomTableViewCell customTableViewCellWithTableView:cmtView];
     if (cmtView == self.cmtView1) {
         cell.image.image = [UIImage imageNamed:self.dataArr1[index]];
+        
         cell.cust.text = self.dataArr1[index];
     }else{
         cell.image.image = [UIImage imageNamed:self.dataArr2[index]];
